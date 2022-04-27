@@ -1,11 +1,15 @@
 {
   "name": "mancala.js",
   "version": "0.0.1",
-  "description": "",
+  "description": "Mancala game library",
   "main": "index.js",
   "scripts": {
+    "dev" : "yarn tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  }
 }
