@@ -4,12 +4,18 @@
   "description": "Mancala game library",
   "main": "index.js",
   "scripts": {
-    "dev" : "yarn tsc -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "yarn tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts",
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^4.6.3"
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "eslint": "^8.14.0",
+    "typescript": "^4.6.3",
+    "prettier": "^2.6.2"
   }
 }
