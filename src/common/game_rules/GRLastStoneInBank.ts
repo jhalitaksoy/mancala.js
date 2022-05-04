@@ -5,6 +5,7 @@ export class GRLastStoneInBank implements GameRule {
   onGameMoveStart(game: MancalaGame, index: number): void {}
   onGameMove(game: MancalaGame, index: number): void {}
   onGameMoveEnd(game: MancalaGame, index: number): void {
+    index = game.board.getPitIndexCircularly(index);
     const pitType = game.board.getPitTypeByIndex(index);
     if (
       (pitType === 'player1Bank' && game.isTurnPlayer1()) ||
