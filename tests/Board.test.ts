@@ -89,4 +89,20 @@ describe('Board Test', () => {
       5, 5, 5, 5, 5, 2, 1, 5, 5, 5, 5, 5, 5, 1
     ]);
   });
+
+  test('test getOppositePitIndex', () => {
+    const board = new Board(6, 4);
+    expect(board.getOppositePitIndex(0)).toBe(12);
+    expect(board.getOppositePitIndex(1)).toBe(11);
+    expect(board.getOppositePitIndex(2)).toBe(10);
+    expect(board.getOppositePitIndex(3)).toBe(9);
+    expect(board.getOppositePitIndex(4)).toBe(8);
+    expect(board.getOppositePitIndex(5)).toBe(7);
+    expect(board.getOppositePitIndex(7)).toBe(5);
+    expect(board.getOppositePitIndex(8)).toBe(4);
+    expect(board.getOppositePitIndex(9)).toBe(3);
+    expect(board.getOppositePitIndex(10)).toBe(2);
+    expect(board.getOppositePitIndex(11)).toBe(1);
+    expect(board.getOppositePitIndex(12)).toBe(0);
+  });
 });

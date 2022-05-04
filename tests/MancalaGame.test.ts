@@ -1,74 +1,75 @@
+import { GRClearBoardAtEnd } from '../src/common/game_rules/GRClearBoardAtEnd';
 import { GRLastStoneInBank } from '../src/common/game_rules/GRLastStoneInBank';
 import { GRLastStoneInEmptyPit } from '../src/common/game_rules/GRLastStoneInEmptyPit';
 import { Board } from '../src/core/Board';
 import { MancalaGame } from '../src/core/MancalaGame';
-import { Player } from '../src/core/Player';
 
 function createGame(): MancalaGame {
   const board = new Board(6, 4);
-  const player1 = new Player('0', 'player1');
-  const player2 = new Player('1', 'player2');
-  const game = new MancalaGame(board, player1, player2, player1.id, [
+  const player1Id = '0';
+  const player2Id = '1';
+  const game = new MancalaGame(board, player1Id, player2Id, player1Id, [
     new GRLastStoneInEmptyPit(),
-    new GRLastStoneInBank()
+    new GRLastStoneInBank(),
+    new GRClearBoardAtEnd()
   ]);
   return game;
 }
 
 describe('Game Test', () => {
-  test('test getPlayerByIndex', () => {
+  test('test getPlayerIdByIndex', () => {
     const game = createGame();
-    const player1 = new Player('0', 'player1');
-    const player2 = new Player('1', 'player2');
-    expect(game.getPlayerByIndex(0)).toStrictEqual(player1);
-    expect(game.getPlayerByIndex(1)).toStrictEqual(player1);
-    expect(game.getPlayerByIndex(2)).toStrictEqual(player1);
-    expect(game.getPlayerByIndex(3)).toStrictEqual(player1);
-    expect(game.getPlayerByIndex(4)).toStrictEqual(player1);
-    expect(game.getPlayerByIndex(5)).toStrictEqual(player1);
-    expect(game.getPlayerByIndex(6)).toStrictEqual(player1);
-    expect(game.getPlayerByIndex(7)).toStrictEqual(player2);
-    expect(game.getPlayerByIndex(8)).toStrictEqual(player2);
-    expect(game.getPlayerByIndex(9)).toStrictEqual(player2);
-    expect(game.getPlayerByIndex(10)).toStrictEqual(player2);
-    expect(game.getPlayerByIndex(11)).toStrictEqual(player2);
-    expect(game.getPlayerByIndex(12)).toStrictEqual(player2);
-    expect(game.getPlayerByIndex(13)).toStrictEqual(player2);
+    const player1Id = '0';
+    const player2Id = '1';
+    expect(game.getPlayerIdByIndex(0)).toStrictEqual(player1Id);
+    expect(game.getPlayerIdByIndex(1)).toStrictEqual(player1Id);
+    expect(game.getPlayerIdByIndex(2)).toStrictEqual(player1Id);
+    expect(game.getPlayerIdByIndex(3)).toStrictEqual(player1Id);
+    expect(game.getPlayerIdByIndex(4)).toStrictEqual(player1Id);
+    expect(game.getPlayerIdByIndex(5)).toStrictEqual(player1Id);
+    expect(game.getPlayerIdByIndex(6)).toStrictEqual(player1Id);
+    expect(game.getPlayerIdByIndex(7)).toStrictEqual(player2Id);
+    expect(game.getPlayerIdByIndex(8)).toStrictEqual(player2Id);
+    expect(game.getPlayerIdByIndex(9)).toStrictEqual(player2Id);
+    expect(game.getPlayerIdByIndex(10)).toStrictEqual(player2Id);
+    expect(game.getPlayerIdByIndex(11)).toStrictEqual(player2Id);
+    expect(game.getPlayerIdByIndex(12)).toStrictEqual(player2Id);
+    expect(game.getPlayerIdByIndex(13)).toStrictEqual(player2Id);
   });
   test('test canPlayerMove', () => {
     const game = createGame();
-    const player1 = new Player('0', 'player1');
-    const player2 = new Player('1', 'player2');
-    expect(game.canPlayerMove(player1, 0)).toBe(true);
-    expect(game.canPlayerMove(player1, 1)).toBe(true);
-    expect(game.canPlayerMove(player1, 2)).toBe(true);
-    expect(game.canPlayerMove(player1, 3)).toBe(true);
-    expect(game.canPlayerMove(player1, 4)).toBe(true);
-    expect(game.canPlayerMove(player1, 5)).toBe(true);
-    expect(game.canPlayerMove(player1, 6)).toBe(false);
-    expect(game.canPlayerMove(player2, 0)).toBe(false);
+    const player1Id = '0';
+    const player2Id = '1';
+    expect(game.canPlayerMove(player1Id, 0)).toBe(true);
+    expect(game.canPlayerMove(player1Id, 1)).toBe(true);
+    expect(game.canPlayerMove(player1Id, 2)).toBe(true);
+    expect(game.canPlayerMove(player1Id, 3)).toBe(true);
+    expect(game.canPlayerMove(player1Id, 4)).toBe(true);
+    expect(game.canPlayerMove(player1Id, 5)).toBe(true);
+    expect(game.canPlayerMove(player1Id, 6)).toBe(false);
+    expect(game.canPlayerMove(player2Id, 0)).toBe(false);
   });
 
   test('test moveByPlayerPit', () => {
     const game = createGame();
-    const player1 = new Player('0', 'player1');
-    const player2 = new Player('1', 'player2');
+    const player1Id = '0';
+    const player2Id = '1';
     expect(game.state).toBe('initial');
-    expect(game.turnPlayerId).toBe(player1.id);
+    expect(game.turnPlayerId).toBe(player1Id);
 
-    game.moveByPlayerPit(player1, 0);
+    game.moveByPlayerPit(player1Id, 0);
     expect(game.state).toBe('playing');
-    expect(game.turnPlayerId).toBe(player2.id);
+    expect(game.turnPlayerId).toBe(player2Id);
 
-    game.moveByPlayerPit(player2, 0);
+    game.moveByPlayerPit(player2Id, 0);
     expect(game.state).toBe('playing');
-    expect(game.turnPlayerId).toBe(player1.id);
+    expect(game.turnPlayerId).toBe(player1Id);
   });
 
   test('test game end test', () => {
     const game = createGame();
-    const player1 = new Player('0', 'player1');
-    const player2 = new Player('1', 'player2');
+    const player1Id = '0';
+    const player2Id = '1';
     expect(game.state).toBe('initial');
     game.board.pits[0].stoneCount = 0;
     game.board.pits[1].stoneCount = 0;
@@ -76,34 +77,34 @@ describe('Game Test', () => {
     game.board.pits[3].stoneCount = 0;
     game.board.pits[4].stoneCount = 0;
     game.board.pits[5].stoneCount = 1;
-    game.moveByPlayerPit(player1, 5);
+    game.moveByPlayerPit(player1Id, 5);
     expect(game.state).toBe('ended');
   });
 
   test('test last stone in bank', () => {
     const game = createGame();
-    const player1 = new Player('0', 'player1');
-    const player2 = new Player('1', 'player2');
+    const player1Id = '0';
+    const player2Id = '1';
     expect(game.state).toBe('initial');
-    expect(game.turnPlayerId).toBe(player1.id);
+    expect(game.turnPlayerId).toBe(player1Id);
 
-    game.moveByPlayerPit(player1, 3);
+    game.moveByPlayerPit(player1Id, 3);
     expect(game.state).toBe('playing');
-    expect(game.turnPlayerId).toBe(player1.id);
+    expect(game.turnPlayerId).toBe(player1Id);
   });
 
   test('test empty pit 1', () => {
     const game = createGame();
-    const player1 = new Player('0', 'player1');
-    const player2 = new Player('1', 'player2');
+    const player1Id = '0';
+    const player2Id = '1';
     expect(game.state).toBe('initial');
     game.board.pits[0].stoneCount = 1;
     game.board.pits[1].stoneCount = 0;
-    game.moveByPlayerPit(player1, 0);
+    game.moveByPlayerPit(player1Id, 0);
     expect(game.state).toBe('playing');
-    expect(game.turnPlayerId).toBe(player2.id);
+    expect(game.turnPlayerId).toBe(player2Id);
     expect(game.board.getStoneArray()).toStrictEqual([
-      0, 0, 4, 4, 4, 4, 5, 4, 0, 4, 4, 4, 4, 0
+      0, 0, 4, 4, 4, 4, 5, 4, 4, 4, 4, 0, 4, 0
     ]);
   });
 });
