@@ -17,10 +17,16 @@ export class Board {
   onGameMove: (index: number) => void = () => {};
   onGameMoveEnd: (index: number) => void = () => {};
 
-  constructor(playerPitCount: number, initialStoneCountInPits: number) {
+  constructor(
+    playerPitCount: number,
+    initialStoneCountInPits: number,
+    pits: Pit[] | null = null
+  ) {
     this.playerPitCount = playerPitCount;
     this.initialStoneCountInPits = initialStoneCountInPits;
-    this.pits = this.createPits(playerPitCount, initialStoneCountInPits);
+    this.pits = pits
+      ? pits
+      : this.createPits(playerPitCount, initialStoneCountInPits);
   }
 
   createPits(playerPitCount: number, initialStoneCountInPits: number): Pit[] {
@@ -139,5 +145,58 @@ export class Board {
 
   public getStoneArray(): number[] {
     return [...this.pits.map((pit) => pit.stoneCount)];
+  }
+
+  public get player1Pits(): Pit[] {
+    return this.pits.slice(
+      this.player1PitStartIndex(),
+      this.player1BankIndex()
+    );
+  }
+
+  get player2Pits(): Pit[] {
+    return this.pits.slice(
+      this.player2PitStartIndex(),
+      this.player2BankIndex()
+    );
+  }
+
+  get player1Bank(): Bank {
+    return this.pits[this.player1BankIndex()];
+  }
+
+  get player2Bank(): Bank {
+    return this.pits[this.player2BankIndex()];
+  }
+
+  public getOppositePitIndex(index: number) {
+    if (index > this.player1BankIndex()) {
+      return this.player2PitStopIndex() - index;
+    } else {
+      return this.player1BankIndex() + this.playerPitCount - index;
+    }
+  }
+
+  public clear() {
+    this.player1Bank.stoneCount = 0;
+    this.player2Bank.stoneCount = 0;
+    this.clearPlayer1Pits();
+    this.clearPlayer2Pits();
+  }
+
+  public clearPlayer1Pits() {
+    this.fillPlayer1Pits(0);
+  }
+
+  public clearPlayer2Pits() {
+    this.fillPlayer2Pits(0);
+  }
+
+  public fillPlayer1Pits(stoneCount: number) {
+    this.player1Pits.forEach((pit) => (pit.stoneCount = stoneCount));
+  }
+
+  public fillPlayer2Pits(stoneCount: number) {
+    this.player2Pits.forEach((pit) => (pit.stoneCount = stoneCount));
   }
 }

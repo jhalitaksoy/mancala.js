@@ -1,29 +1,29 @@
 import { Board, PitType } from './Board';
 import { GameRule } from './GameRule';
-import { Player } from './Player';
 
 export type GameState = 'initial' | 'playing' | 'ended';
 
 export class MancalaGame {
   board: Board;
-  player1: Player;
-  player2: Player;
+  player1Id: string;
+  player2Id: string;
   turnPlayerId: string;
   state: GameState;
   gameRules: GameRule[];
 
   constructor(
     board: Board,
-    player1: Player,
-    player2: Player,
+    player1Id: string,
+    player2Id: string,
     turnPlayerId: string,
-    gameRules: GameRule[]
+    gameRules: GameRule[],
+    state: GameState = 'initial'
   ) {
     this.board = board;
-    this.player1 = player1;
-    this.player2 = player2;
+    this.player1Id = player1Id;
+    this.player2Id = player2Id;
     this.turnPlayerId = turnPlayerId;
-    this.state = 'initial';
+    this.state = state;
     this.gameRules = gameRules;
     this.listenBoardMoveEvents();
   }
@@ -47,89 +47,92 @@ export class MancalaGame {
   }
 
   changePlayerTurn() {
-    if (this.turnPlayerId === this.player1.id) {
-      this.turnPlayerId = this.player2.id;
+    if (this.turnPlayerId === this.player1Id) {
+      this.turnPlayerId = this.player2Id;
     } else {
-      this.turnPlayerId = this.player1.id;
+      this.turnPlayerId = this.player1Id;
     }
   }
 
   isTurnPlayer1() {
-    return this.player1.id === this.turnPlayerId;
+    return this.player1Id === this.turnPlayerId;
   }
 
   isTurnPlayer2() {
-    return this.player2.id === this.turnPlayerId;
+    return this.player2Id === this.turnPlayerId;
   }
 
-  getPlayerByPitType(pitType: PitType): Player {
+  getPlayerIdByPitType(pitType: PitType): string {
     if (pitType === 'player1Pit' || pitType === 'player1Bank') {
-      return this.player1;
+      return this.player1Id;
     } else if (pitType === 'player2Pit' || pitType === 'player2Bank') {
-      return this.player2;
+      return this.player2Id;
     } else {
       throw new Error('Unknown pit type : ' + pitType);
     }
   }
 
-  getPlayerByIndex(index: number): Player {
+  getPlayerIdByIndex(index: number): string {
     const pitType = this.board.getPitTypeByIndex(index);
-    return this.getPlayerByPitType(pitType);
+    return this.getPlayerIdByPitType(pitType);
   }
 
   checkIsPlayerTurnByIndex(index: number): boolean {
-    const player = this.getPlayerByIndex(index);
-    return this.checkIsPlayerTurn(player);
+    const playerId = this.getPlayerIdByIndex(index);
+    return this.checkIsPlayerTurn(playerId);
   }
 
-  getBoardIndexByPlayer(player: Player, pitIndex: number) {
-    if (this.player1.id === player.id) {
+  getBoardIndexByPlayerId(playerId: string, pitIndex: number) {
+    if (this.player1Id === playerId) {
       return this.board.player1PitStartIndex() + pitIndex;
-    } else if (this.player2.id === player.id) {
+    } else if (this.player2Id === playerId) {
       return this.board.player2PitStartIndex() + pitIndex;
     } else {
       return -1; // throwing an error might be better
     }
   }
 
-  public checkIsPlayerTurn(player: Player) {
-    return player.id === this.turnPlayerId;
+  public checkIsPlayerTurn(playerId: string) {
+    return playerId === this.turnPlayerId;
   }
 
-  public checkPitIndexForPlayer(player: Player, pitIndex: number) {
-    const foundPlayer = this.getPlayerByIndex(
-      this.getBoardIndexByPlayer(player, pitIndex)
+  public checkPitIndexForPlayerId(playerId: string, pitIndex: number) {
+    const foundPlayerId = this.getPlayerIdByIndex(
+      this.getBoardIndexByPlayerId(playerId, pitIndex)
     );
-    return player.id === foundPlayer.id;
+    return playerId === foundPlayerId;
   }
 
-  public checkIsPitIndexBank(player: Player, pitIndex: number) {
+  public checkIsPitIndexBank(playerId: string, pitIndex: number) {
     const pitType = this.board.getPitTypeByIndex(
-      this.getBoardIndexByPlayer(player, pitIndex)
+      this.getBoardIndexByPlayerId(playerId, pitIndex)
     );
     return pitType === 'player1Bank' || pitType === 'player2Bank';
   }
 
-  public canPlayerMove(player: Player, pitIndex: number) {
-    const isPitIndexCorrect = this.checkPitIndexForPlayer(player, pitIndex);
-    const isPitIndexBank = this.checkIsPitIndexBank(player, pitIndex);
-    const isPlayerTurn = this.checkIsPlayerTurn(player);
+  public canPlayerMove(playerId: string, pitIndex: number) {
+    const isPitIndexCorrect = this.checkPitIndexForPlayerId(playerId, pitIndex);
+    const isPitIndexBank = this.checkIsPitIndexBank(playerId, pitIndex);
+    const isPlayerTurn = this.checkIsPlayerTurn(playerId);
     return isPitIndexCorrect && !isPitIndexBank && isPlayerTurn;
   }
 
-  public moveByPlayerPit(player: Player, pitIndex: number) {
+  public moveByPlayerPit(playerId: string, pitIndex: number) {
     if (this.state === 'ended') return;
     if (this.state === 'initial') {
       this.state = 'playing';
     }
-    if (this.canPlayerMove(player, pitIndex)) {
-      this.board.move(this.getBoardIndexByPlayer(player, pitIndex));
+    if (this.canPlayerMove(playerId, pitIndex)) {
+      this.board.move(this.getBoardIndexByPlayerId(playerId, pitIndex));
       if (this.checkGameIsEnded()) {
         this.state = 'ended';
       }
     } else {
-      const isPitIndexCorrect = this.checkPitIndexForPlayer(player, pitIndex);
-      const isPlayerTurn = this.checkIsPlayerTurn(player);
+      const isPitIndexCorrect = this.checkPitIndexForPlayerId(
+        playerId,
+        pitIndex
+      );
+      const isPlayerTurn = this.checkIsPlayerTurn(playerId);
       throw new Error(
         `Player cannot move reason : isPitIndexCorrect = ${isPitIndexCorrect} isPlayerTurn = ${isPlayerTurn}`
       );
@@ -165,7 +168,7 @@ export class MancalaGame {
       );
   }
 
-  checkGameIsEnded(): boolean {
+  public checkGameIsEnded(): boolean {
     if (
       this.getPlayer1StoneCountInPits() === 0 ||
       this.getPlayer2StoneCountInPits() === 0
@@ -173,5 +176,33 @@ export class MancalaGame {
       return true;
     }
     return false;
+  }
+
+  public getWonPlayerId(): string | null {
+    if (this.checkGameIsEnded()) {
+      if (
+        this.board.player1Bank.stoneCount > this.board.player2Bank.stoneCount
+      ) {
+        return this.player1Id;
+      } else {
+        return this.player2Id;
+      }
+    }
+    return null;
+  }
+
+  public static createFromMancalaGame(mancalaGame: MancalaGame): MancalaGame {
+    return new MancalaGame(
+      new Board(
+        mancalaGame.board.playerPitCount,
+        mancalaGame.board.initialStoneCountInPits,
+        mancalaGame.board.pits
+      ),
+      mancalaGame.player1Id,
+      mancalaGame.player2Id,
+      mancalaGame.turnPlayerId,
+      mancalaGame.gameRules,
+      mancalaGame.state
+    );
   }
 }
