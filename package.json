@@ -2,25 +2,26 @@
   "name": "mancala.js",
   "version": "0.0.1",
   "description": "Mancala game library",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "yarn tsc -w",
     "test": "yarn jest",
     "lint": "eslint . --ext .ts",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "build": "tsc",
+    "prepublish": "tsc"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Halit Aksoy",
+  "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "eslint": "^8.14.0",
     "jest": "^27.5.1",
     "prettier": "^2.6.2",
     "ts-jest": "^27.1.4",
-    "typescript": "^4.6.3",
-    "@types/jest": "^27.4.1"
-  },
-  "dependencies": {
+    "typescript": "^4.6.3"
   }
 }
