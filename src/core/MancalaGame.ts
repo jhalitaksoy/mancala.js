@@ -4,6 +4,7 @@ import { GameRule } from './GameRule';
 export type GameState = 'initial' | 'playing' | 'ended';
 
 export class MancalaGame {
+  id: string;
   board: Board;
   player1Id: string;
   player2Id: string;
@@ -12,6 +13,7 @@ export class MancalaGame {
   gameRules: GameRule[];
 
   constructor(
+    id: string,
     board: Board,
     player1Id: string,
     player2Id: string,
@@ -19,6 +21,7 @@ export class MancalaGame {
     gameRules: GameRule[],
     state: GameState = 'initial'
   ) {
+    this.id = id;
     this.board = board;
     this.player1Id = player1Id;
     this.player2Id = player2Id;
@@ -193,6 +196,7 @@ export class MancalaGame {
 
   public static createFromMancalaGame(mancalaGame: MancalaGame): MancalaGame {
     return new MancalaGame(
+      mancalaGame.id,
       new Board(
         mancalaGame.board.playerPitCount,
         mancalaGame.board.initialStoneCountInPits,
