@@ -1,5 +1,6 @@
 import { Board, PitType } from './Board';
 import { GameRule } from './GameRule';
+import { HistoryItem, MoveHistoryItem } from './HistoryItem';
 
 export type GameState = 'initial' | 'playing' | 'ended';
 
@@ -11,6 +12,7 @@ export class MancalaGame {
   turnPlayerId: string;
   state: GameState;
   gameRules: GameRule[];
+  history: HistoryItem[];
 
   constructor(
     id: string,
@@ -19,6 +21,7 @@ export class MancalaGame {
     player2Id: string,
     turnPlayerId: string,
     gameRules: GameRule[],
+    history: HistoryItem[],
     state: GameState = 'initial'
   ) {
     this.id = id;
@@ -28,6 +31,7 @@ export class MancalaGame {
     this.turnPlayerId = turnPlayerId;
     this.state = state;
     this.gameRules = gameRules;
+    this.history = history;
     this.listenBoardMoveEvents();
   }
 
@@ -126,7 +130,11 @@ export class MancalaGame {
       this.state = 'playing';
     }
     if (this.canPlayerMove(playerId, pitIndex)) {
-      this.board.move(this.getBoardIndexByPlayerId(playerId, pitIndex));
+      const moveIndex = this.getBoardIndexByPlayerId(playerId, pitIndex);
+      this.board.move(moveIndex);
+      this.history.push(
+        new MoveHistoryItem(playerId, moveIndex, this.board.getStoneArray())
+      );
       if (this.checkGameIsEnded()) {
         this.state = 'ended';
       }
@@ -206,6 +214,7 @@ export class MancalaGame {
       mancalaGame.player2Id,
       mancalaGame.turnPlayerId,
       mancalaGame.gameRules,
+      mancalaGame.history,
       mancalaGame.state
     );
   }
