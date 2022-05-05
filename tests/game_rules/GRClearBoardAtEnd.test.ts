@@ -8,11 +8,19 @@ function createGame(): MancalaGame {
   const board = new Board(6, 4);
   const player1Id = '0';
   const player2Id = '1';
-  const game = new MancalaGame('0', board, player1Id, player2Id, player1Id, [
-    new GRLastStoneInEmptyPit(),
-    new GRLastStoneInBank(),
-    new GRClearBoardAtEnd()
-  ]);
+  const game = new MancalaGame(
+    '0',
+    board,
+    player1Id,
+    player2Id,
+    player1Id,
+    [
+      new GRLastStoneInEmptyPit(),
+      new GRLastStoneInBank(),
+      new GRClearBoardAtEnd()
+    ],
+    []
+  );
   return game;
 }
 
