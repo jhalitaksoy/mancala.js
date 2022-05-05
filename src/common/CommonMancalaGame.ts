@@ -5,8 +5,8 @@ import { GRLastStoneInBank } from './game_rules/GRLastStoneInBank';
 import { GRLastStoneInEmptyPit } from './game_rules/GRLastStoneInEmptyPit';
 
 export class CommonMancalaGame extends MancalaGame {
-  constructor(player1Id: string, player2Id: string) {
-    super(new CommonBoard(), player1Id, player2Id, player1Id, [
+  constructor(id: string, player1Id: string, player2Id: string) {
+    super(id, new CommonBoard(), player1Id, player2Id, player1Id, [
       new GRLastStoneInEmptyPit(),
       new GRLastStoneInBank(),
       new GRClearBoardAtEnd()
