@@ -83,6 +83,18 @@ export class Board {
     }
   }
 
+  public checkPitTypeIsNormalPitByIndex(index: number): boolean {
+    this.checkIndeAndMaybeThrowError(index);
+    const pitType = this.getPitTypeByIndex(index);
+    return pitType === 'player1Pit' || pitType === 'player2Pit';
+  }
+
+  public checkPitTypeIsBankByIndex(index: number): boolean {
+    this.checkIndeAndMaybeThrowError(index);
+    const pitType = this.getPitTypeByIndex(index);
+    return pitType === 'player1Bank' || pitType === 'player2Bank';
+  }
+
   public move(index: number) {
     this.checkIndeAndMaybeThrowError(index);
     const pitType = this.getPitTypeByIndex(index);
