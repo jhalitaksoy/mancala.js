@@ -97,21 +97,23 @@ export class Board {
     }
     const stepCount = pit.stoneCount;
     this.pits[index].stoneCount = 0;
-    this.fireOnGameMoveStart(index);
-    if (stepCount === 1) {
-      this.fireOnGameMove(index);
-      this.getNextPitCircularly(index).increaseStone();
-      const nextPitIndex = this.getNextPitIndexCircularly(index);
-      this.fireOnGameMove(nextPitIndex);
-      this.fireOnGameMoveEnd(nextPitIndex);
-    } else {
-      for (let i = 0; i < stepCount; i++) {
-        const pit = this.getPitCircularly(index + i);
-        pit.increaseStone();
-        this.fireOnGameMove(index + i);
-      }
-      this.fireOnGameMoveEnd(index + stepCount - 1);
+    const startIndex = stepCount === 1 ? index + 1 : index;
+    this.moveInternal(startIndex, stepCount);
+  }
+
+  private moveInternal(startIndex: number, stepCount: number) {
+    this.fireOnGameMoveStart(startIndex);
+    for (let i = startIndex; i < startIndex + stepCount; i++) {
+      this.onGameMoveStep(i);
     }
+    const stopIndex = startIndex + stepCount - 1;
+    this.fireOnGameMoveEnd(stopIndex);
+  }
+
+  public onGameMoveStep(index: number) {
+    const pit = this.pits[this.getPitIndexCircularly(index)];
+    pit.increaseStone();
+    this.fireOnGameMove(index);
   }
 
   public getNextPitCircularly(currentPitIndex: number) {
