@@ -1,5 +1,8 @@
 import { GameRule } from '../../core/GameRule';
+import { GameStep } from '../../core/HistoryItem';
 import { MancalaGame } from '../../core/MancalaGame';
+
+export const GAME_STEP_LAST_STONE_IN_BANK = 'GAME_STEP_LAST_STONE_IN_BANK';
 
 export class GRLastStoneInBank implements GameRule {
   onGameMoveStart(game: MancalaGame, index: number): void {}
@@ -11,6 +14,7 @@ export class GRLastStoneInBank implements GameRule {
       (pitType === 'player1Bank' && game.isTurnPlayer1()) ||
       (pitType === 'player2Bank' && game.isTurnPlayer2())
     ) {
+      game.addGameStep(new GameStep(index, GAME_STEP_LAST_STONE_IN_BANK));
     } else {
       game.changePlayerTurn();
     }

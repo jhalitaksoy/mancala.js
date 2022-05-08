@@ -35,5 +35,12 @@ describe('GRClearBoardAtEnd Test', () => {
         .map((pit) => pit.stoneCount)
         .reduce((sum, stoneCount) => sum + stoneCount, 0)
     ).toBe(0);
+    expect(game.history[0].gameSteps).toStrictEqual([
+      new GameStep(6, GAME_STEP_GAME_MOVE),
+      new GameStep(6, GAME_STEP_LAST_STONE_IN_BANK),
+      new GameStep(6, GAME_STEP_BOARD_CLEARED, {
+        pitIndexesThatHasStone: [12]
+      })
+    ]);
   });
 });
