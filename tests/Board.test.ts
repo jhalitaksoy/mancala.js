@@ -1,6 +1,23 @@
 import { Board } from '../src/core/Board';
 
 describe('Board Test', () => {
+  test('test pit index', () => {
+    const board = new Board(6, 4);
+    expect(board.pits[0].index).toBe(0);
+    expect(board.pits[1].index).toBe(1);
+    expect(board.pits[2].index).toBe(2);
+    expect(board.pits[3].index).toBe(3);
+    expect(board.pits[4].index).toBe(4);
+    expect(board.pits[5].index).toBe(5);
+    expect(board.pits[6].index).toBe(6);
+    expect(board.pits[7].index).toBe(7);
+    expect(board.pits[8].index).toBe(8);
+    expect(board.pits[9].index).toBe(9);
+    expect(board.pits[10].index).toBe(10);
+    expect(board.pits[11].index).toBe(11);
+    expect(board.pits[12].index).toBe(12);
+    expect(board.pits[13].index).toBe(13);
+  });
   test('test getPitTypeByIndex', () => {
     const board = new Board(6, 4);
     expect(board.getPitTypeByIndex(0)).toBe('player1Pit');

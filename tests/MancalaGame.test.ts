@@ -1,29 +1,6 @@
-import { GRClearBoardAtEnd } from '../src/common/game_rules/GRClearBoardAtEnd';
-import { GRLastStoneInBank } from '../src/common/game_rules/GRLastStoneInBank';
-import { GRLastStoneInEmptyPit } from '../src/common/game_rules/GRLastStoneInEmptyPit';
-import { Board } from '../src/core/Board';
-import { MoveHistoryItem } from '../src/core/HistoryItem';
-import { MancalaGame } from '../src/core/MancalaGame';
-
-function createGame(): MancalaGame {
-  const board = new Board(6, 4);
-  const player1Id = '0';
-  const player2Id = '1';
-  const game = new MancalaGame(
-    '0',
-    board,
-    player1Id,
-    player2Id,
-    player1Id,
-    [
-      new GRLastStoneInEmptyPit(),
-      new GRLastStoneInBank(),
-      new GRClearBoardAtEnd()
-    ],
-    []
-  );
-  return game;
-}
+import { GameStep, MoveHistoryItem } from '../src/core/HistoryItem';
+import { GAME_STEP_GAME_MOVE, MancalaGame } from '../src/core/MancalaGame';
+import { createGame } from './TestUtil';
 
 describe('Game Test', () => {
   test('test getPlayerIdByIndex', () => {
@@ -125,27 +102,55 @@ describe('Game Test', () => {
     game.moveByPlayerPit(player2Id, 0);
     game.moveByPlayerPit(player1Id, 1);
     game.moveByPlayerPit(player2Id, 1);
-    expect(game.history).toStrictEqual([
-      new MoveHistoryItem(
-        player1Id,
-        0,
-        [1, 5, 5, 5, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
-      ),
-      new MoveHistoryItem(
-        player2Id,
-        7,
-        [1, 5, 5, 5, 4, 4, 0, 1, 5, 5, 5, 4, 4, 0]
-      ),
-      new MoveHistoryItem(
-        player1Id,
-        1,
-        [1, 1, 6, 6, 5, 5, 0, 1, 5, 5, 5, 4, 4, 0]
-      ),
-      new MoveHistoryItem(
-        player2Id,
-        8,
-        [1, 1, 6, 6, 5, 5, 0, 1, 1, 6, 6, 5, 5, 0]
-      )
-    ]);
+    const historyItem1 = new MoveHistoryItem(
+      player1Id,
+      0,
+      [1, 5, 5, 5, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0],
+      [
+        new GameStep(0, GAME_STEP_GAME_MOVE),
+        new GameStep(1, GAME_STEP_GAME_MOVE),
+        new GameStep(2, GAME_STEP_GAME_MOVE),
+        new GameStep(3, GAME_STEP_GAME_MOVE)
+      ]
+    );
+    const historyItem2 = new MoveHistoryItem(
+      player2Id,
+      7,
+      [1, 5, 5, 5, 4, 4, 0, 1, 5, 5, 5, 4, 4, 0],
+      [
+        new GameStep(7, GAME_STEP_GAME_MOVE),
+        new GameStep(8, GAME_STEP_GAME_MOVE),
+        new GameStep(9, GAME_STEP_GAME_MOVE),
+        new GameStep(10, GAME_STEP_GAME_MOVE)
+      ]
+    );
+    const historyItem3 = new MoveHistoryItem(
+      player1Id,
+      1,
+      [1, 1, 6, 6, 5, 5, 0, 1, 5, 5, 5, 4, 4, 0],
+      [
+        new GameStep(1, GAME_STEP_GAME_MOVE),
+        new GameStep(2, GAME_STEP_GAME_MOVE),
+        new GameStep(3, GAME_STEP_GAME_MOVE),
+        new GameStep(4, GAME_STEP_GAME_MOVE),
+        new GameStep(5, GAME_STEP_GAME_MOVE)
+      ]
+    );
+    const historyItem4 = new MoveHistoryItem(
+      player2Id,
+      8,
+      [1, 1, 6, 6, 5, 5, 0, 1, 1, 6, 6, 5, 5, 0],
+      [
+        new GameStep(8, GAME_STEP_GAME_MOVE),
+        new GameStep(9, GAME_STEP_GAME_MOVE),
+        new GameStep(10, GAME_STEP_GAME_MOVE),
+        new GameStep(11, GAME_STEP_GAME_MOVE),
+        new GameStep(12, GAME_STEP_GAME_MOVE)
+      ]
+    );
+    expect(game.history[0]).toStrictEqual(historyItem1);
+    expect(game.history[1]).toStrictEqual(historyItem2);
+    expect(game.history[2]).toStrictEqual(historyItem3);
+    expect(game.history[3]).toStrictEqual(historyItem4);
   });
 });

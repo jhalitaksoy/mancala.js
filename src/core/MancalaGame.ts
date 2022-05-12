@@ -1,8 +1,10 @@
 import { Board, PitType } from './Board';
 import { GameRule } from './GameRule';
-import { HistoryItem, MoveHistoryItem } from './HistoryItem';
+import { HistoryItem, MoveHistoryItem, GameStep } from './HistoryItem';
 
 export type GameState = 'initial' | 'playing' | 'ended';
+
+export const GAME_STEP_GAME_MOVE = 'GAME_STEP_GAME_MOVE';
 
 export class MancalaGame {
   id: string;
@@ -13,6 +15,7 @@ export class MancalaGame {
   state: GameState;
   gameRules: GameRule[];
   history: HistoryItem[];
+  currentHistoryItem: HistoryItem | null = null;
 
   constructor(
     id: string,
@@ -42,6 +45,7 @@ export class MancalaGame {
       });
     };
     this.board.onGameMove = (index: number) => {
+      this.addGameStep(new GameStep(index, GAME_STEP_GAME_MOVE));
       this.gameRules.forEach((gameRule) => {
         gameRule.onGameMove(this, index);
       });
@@ -131,10 +135,15 @@ export class MancalaGame {
     }
     if (this.canPlayerMove(playerId, pitIndex)) {
       const moveIndex = this.getBoardIndexByPlayerId(playerId, pitIndex);
-      this.board.move(moveIndex);
-      this.history.push(
-        new MoveHistoryItem(playerId, moveIndex, this.board.getStoneArray())
+      this.currentHistoryItem = new MoveHistoryItem(
+        playerId,
+        moveIndex,
+        [],
+        []
       );
+      this.board.move(moveIndex);
+      this.currentHistoryItem.boardSnapshot = this.board.getStoneArray();
+      this.history.push(this.currentHistoryItem);
       if (this.checkGameIsEnded()) {
         this.state = 'ended';
       }
@@ -217,5 +226,13 @@ export class MancalaGame {
       mancalaGame.history,
       mancalaGame.state
     );
+  }
+
+  public getCurrentHistoryItem(): HistoryItem | null {
+    return this.currentHistoryItem;
+  }
+
+  public addGameStep(gameStep: GameStep) {
+    this.getCurrentHistoryItem()?.gameSteps.push(gameStep);
   }
 }

@@ -1,28 +1,19 @@
-import { GRLastStoneInBank } from '../../src/common/game_rules/GRLastStoneInBank';
-import { GRLastStoneInEmptyPit } from '../../src/common/game_rules/GRLastStoneInEmptyPit';
-import { GRClearBoardAtEnd } from '../../src/common/game_rules/GRClearBoardAtEnd';
+import {
+  GAME_STEP_LAST_STONE_IN_BANK,
+  GRLastStoneInBank
+} from '../../src/common/game_rules/GRLastStoneInBank';
+import {
+  GAME_STEP_LAST_STONE_IN_EMPTY_PIT,
+  GRLastStoneInEmptyPit
+} from '../../src/common/game_rules/GRLastStoneInEmptyPit';
+import {
+  GAME_STEP_BOARD_CLEARED,
+  GRClearBoardAtEnd
+} from '../../src/common/game_rules/GRClearBoardAtEnd';
 import { Board } from '../../src/core/Board';
-import { MancalaGame } from '../../src/core/MancalaGame';
-
-function createGame(): MancalaGame {
-  const board = new Board(6, 4);
-  const player1Id = '0';
-  const player2Id = '1';
-  const game = new MancalaGame(
-    '0',
-    board,
-    player1Id,
-    player2Id,
-    player1Id,
-    [
-      new GRLastStoneInEmptyPit(),
-      new GRLastStoneInBank(),
-      new GRClearBoardAtEnd()
-    ],
-    []
-  );
-  return game;
-}
+import { GAME_STEP_GAME_MOVE, MancalaGame } from '../../src/core/MancalaGame';
+import { GameStep } from '../../src/core/HistoryItem';
+import { createGame } from '../TestUtil';
 
 describe('GRClearBoardAtEnd Test', () => {
   test('test GRClearBoardAtEnd 1', () => {
@@ -44,5 +35,12 @@ describe('GRClearBoardAtEnd Test', () => {
         .map((pit) => pit.stoneCount)
         .reduce((sum, stoneCount) => sum + stoneCount, 0)
     ).toBe(0);
+    expect(game.history[0].gameSteps).toStrictEqual([
+      new GameStep(6, GAME_STEP_GAME_MOVE),
+      new GameStep(6, GAME_STEP_LAST_STONE_IN_BANK),
+      new GameStep(6, GAME_STEP_BOARD_CLEARED, {
+        pitIndexesThatHasStone: [12]
+      })
+    ]);
   });
 });
