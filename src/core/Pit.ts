@@ -1,7 +1,9 @@
 export class Pit {
+  index: number;
   stoneCount: number;
 
-  constructor(stoneCount = 0) {
+  constructor(index: number, stoneCount = 0) {
+    this.index = index;
     this.stoneCount = stoneCount;
   }
 
@@ -19,8 +21,8 @@ export class Pit {
 }
 
 export class Bank extends Pit {
-  constructor(stoneCount = 0) {
-    super(stoneCount);
+  constructor(index: number, stoneCount = 0) {
+    super(index, stoneCount);
   }
 
   override get isBank(): boolean {

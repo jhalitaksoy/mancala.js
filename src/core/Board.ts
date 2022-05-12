@@ -35,9 +35,9 @@ export class Board {
     for (let index = 0; index < this.totalPitCount(); index++) {
       const pitType = this.getPitTypeByIndex(index);
       if (pitType === 'player1Pit' || pitType === 'player2Pit') {
-        pitArray[index] = new Pit(initialStoneCountInPits);
+        pitArray[index] = new Pit(index, initialStoneCountInPits);
       } else if (pitType === 'player1Bank' || pitType === 'player2Bank') {
-        pitArray[index] = new Bank(0);
+        pitArray[index] = new Bank(index, 0);
       }
     }
     return pitArray;
