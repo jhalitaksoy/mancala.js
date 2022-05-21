@@ -1,6 +1,7 @@
 import { MancalaGame } from '../core/MancalaGame';
 import { CommonBoard } from './CommonBoard';
 import { GRClearBoardAtEnd } from './game_rules/GRClearBoardAtEnd';
+import { GRDoubleStoneInPit } from './game_rules/GRDoubleStoneInPit';
 import { GRLastStoneInBank } from './game_rules/GRLastStoneInBank';
 import { GRLastStoneInEmptyPit } from './game_rules/GRLastStoneInEmptyPit';
 
@@ -14,6 +15,7 @@ export class CommonMancalaGame extends MancalaGame {
       player1Id,
       [
         new GRLastStoneInEmptyPit(),
+        new GRDoubleStoneInPit(),
         new GRLastStoneInBank(),
         new GRClearBoardAtEnd()
       ],

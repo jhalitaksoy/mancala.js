@@ -1,6 +1,7 @@
 import { GRClearBoardAtEnd } from '../src/common/game_rules/GRClearBoardAtEnd';
 import { GRLastStoneInBank } from '../src/common/game_rules/GRLastStoneInBank';
 import { GRLastStoneInEmptyPit } from '../src/common/game_rules/GRLastStoneInEmptyPit';
+import { GRDoubleStoneInPit } from '../src/common/game_rules/GRDoubleStoneInPit';
 import { Board } from '../src/core/Board';
 import { MancalaGame } from '../src/core/MancalaGame';
 
@@ -16,6 +17,7 @@ export function createGame(): MancalaGame {
     player1Id,
     [
       new GRLastStoneInEmptyPit(),
+      new GRDoubleStoneInPit(),
       new GRLastStoneInBank(),
       new GRClearBoardAtEnd()
     ],
