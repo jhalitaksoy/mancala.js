@@ -153,4 +153,24 @@ describe('Game Test', () => {
     expect(game.history[2]).toStrictEqual(historyItem3);
     expect(game.history[3]).toStrictEqual(historyItem4);
   });
+
+  test('test getWonPlayerId', () => {
+    const game = createGame();
+    const player1Id = '0';
+    const player2Id = '1';
+
+    game.board.clear();
+
+    game.board.pits[game.board.player1BankIndex()].stoneCount = 1;
+    game.board.pits[game.board.player2BankIndex()].stoneCount = 0;
+    expect(game.getWonPlayerId()).toBe(player1Id);
+
+    game.board.pits[game.board.player1BankIndex()].stoneCount = 0;
+    game.board.pits[game.board.player2BankIndex()].stoneCount = 1;
+    expect(game.getWonPlayerId()).toBe(player2Id);
+
+    game.board.pits[game.board.player1BankIndex()].stoneCount = 0;
+    game.board.pits[game.board.player2BankIndex()].stoneCount = 0;
+    expect(game.getWonPlayerId()).toBe(undefined);
+  });
 });
