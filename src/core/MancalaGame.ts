@@ -198,17 +198,18 @@ export class MancalaGame {
     return false;
   }
 
-  public getWonPlayerId(): string | null {
+  public getWonPlayerId(): string | undefined {
+    const player1StoneCount = this.board.player1Bank.stoneCount;
+    const player2StoneCount = this.board.player2Bank.stoneCount;
     if (this.checkGameIsEnded()) {
-      if (
-        this.board.player1Bank.stoneCount > this.board.player2Bank.stoneCount
-      ) {
+      if (player1StoneCount === player2StoneCount) {
+        return undefined;
+      } else if (player1StoneCount > player2StoneCount) {
         return this.player1Id;
       } else {
         return this.player2Id;
       }
     }
-    return null;
   }
 
   public static createFromMancalaGame(mancalaGame: MancalaGame): MancalaGame {
